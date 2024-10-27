@@ -1,29 +1,30 @@
 pipeline {
     agent any
     environment {
-        // Set Docker registry details here
-        DOCKER_REGISTRY = "kaderdevops"
-        DOCKER_CREDENTIALS = "docker_jenkins_access"
+        DOCKER_USERNAME = "kaderdevops"  // Docker Hub username
+        DOCKER_CREDENTIALS = "docker_jenkins_access" // Jenkins credentials ID
+        IMAGE_NAME = "goal-front-jenkins"
+        TAG = "jenkins"
     }
     stages {
         stage('Build Frontend') {
             steps {
                 script {
                     // Build the frontend Docker image
-                    sh 'ls'
-                    docker.build("${DOCKER_REGISTRY}/goal-front-jenkins:jenkins", ".")
+                    docker.build("${DOCKER_USERNAME}/${IMAGE_NAME}:${TAG}", ".")
                 }
             }
         }
         
-        stage('Pushing Frontend Images') {
+        stage('Push Frontend Image') {
             steps {
                 script {
-                    docker.withRegistry("https://${DOCKER_REGISTRY}", "${DOCKER_CREDENTIALS}") {
-                        docker.image("${DOCKER_REGISTRY}/goal-front-jenkins:jenkins").push()
-                 }
-             }
-         }
-     }
-  }
+                    // Use the correct Docker Hub registry URL for login
+                    docker.withRegistry("https://index.docker.io/v1/", "${DOCKER_CREDENTIALS}") {
+                        docker.image("${DOCKER_USERNAME}/${IMAGE_NAME}:${TAG}").push()
+                    }
+                }
+            }
+        }
+    }
 }
