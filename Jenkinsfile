@@ -11,7 +11,7 @@ pipeline {
                 script {
                     // Build the frontend Docker image
                     sh 'ls'
-                    docker.build("${DOCKER_REGISTRY}/goal-app-jenkins:jenkins", ".")
+                    docker.build("${DOCKER_REGISTRY}/goal-front-jenkins:jenkins", ".")
                 }
             }
         }
