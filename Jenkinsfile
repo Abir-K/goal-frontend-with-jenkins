@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         // Set Docker registry details here
-        DOCKER_REGISTRY = "hub.docker.com/u/kaderdevops"
+        DOCKER_REGISTRY = "kaderdevops"
         DOCKER_CREDENTIALS = "docker_jenkins_access"
     }
     stages {
