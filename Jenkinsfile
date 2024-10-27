@@ -2,8 +2,8 @@ pipeline {
     agent any
     environment {
         // Set Docker registry details here
-        DOCKER_REGISTRY = "docker.io/kaderdevops"
-        DOCKER_CREDENTIALS = "dockeraccess"
+        DOCKER_REGISTRY = "hub.docker.com/u/kaderdevops"
+        DOCKER_CREDENTIALS = "docker_jenkins_access"
     }
     stages {
         stage('Build Frontend') {
