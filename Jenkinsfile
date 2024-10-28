@@ -7,6 +7,11 @@ pipeline {
         TAG = "deploy"
     }
     stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/Abir-K/goal-frontend-with-jenkins'
+            }
+        }
         stage('Build Frontend') {
             steps {
                 script {
@@ -37,7 +42,6 @@ pipeline {
                     git config user.email "abirbeatz@gmail.com"
                     git config user.name "Abir-K"
                     BUILD_NUMBER=${TAG}
-                    git checkout main
                     sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" argocd_deployment/deployment.yaml
                     git add argocd_deployment/deployment.yaml
                     git commit -m "New Tag_${BUILD_NUMBER}"
