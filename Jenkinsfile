@@ -39,7 +39,7 @@ pipeline {
         }
         steps {
             //withCredentials([usernamePassword(credentialsId: 'hellogithub', passwordVariable: 'pass', usernameVariable: 'uname')]) 
-            withCredentials([string(credentialsId: 'hellogithub', variable: 'GIT_CRED')]){
+            withCredentials([string(credentialsId: 'github', variable: 'GIT_CRED')]){
                 sh '''
                     git config --global user.email "abirbeatz@gmail.com"
                     git config --global user.name "Abir-K"
