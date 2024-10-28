@@ -45,10 +45,10 @@ pipeline {
                     sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" argocd_deployment/deployment.yaml
                     git add argocd_deployment/deployment.yaml
                     git commit -m "New Tag_${BUILD_NUMBER}"
+                    git push https://$uname:$pass@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} main
                     
                 '''
-            sh 'git checkout main'
-            sh 'git push git@github.com:Abir-K/goal-frontend-with-jenkins.git'            }
+            }
         }
     }
     }
