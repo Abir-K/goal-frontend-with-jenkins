@@ -47,8 +47,8 @@ pipeline {
                     git commit -m "New Tag_${BUILD_NUMBER}"
                     
                 '''
-                sh 'git push https://Abir-K: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@github.com/Abir-K/goal-frontend-with-jenkins.git main'
-            }
+            sh 'git checkout main'
+            sh 'git push https://Abir-K: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@github.com/Abir-K/goal-frontend-with-jenkins.git'            }
         }
     }
     }
