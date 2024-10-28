@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: goal-fe
-        image: kaderdevops/goal-front-jenkins:deploy
+        image: kaderdevops/goal-front-jenkins:a
         ports:
         - containerPort: 8080
