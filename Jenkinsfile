@@ -48,7 +48,7 @@ pipeline {
                     
                 '''
             sh 'git checkout main'
-            sh 'git push https://Abir-K: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@github.com/Abir-K/goal-frontend-with-jenkins.git'            }
+            sh 'git push git@github.com:Abir-K/goal-frontend-with-jenkins.git'            }
         }
     }
     }
