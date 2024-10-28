@@ -4,7 +4,7 @@ pipeline {
         DOCKER_USERNAME = "kaderdevops"  // Docker Hub username
         DOCKER_CREDENTIALS = "docker_jenkins_access" // Jenkins credentials ID
         IMAGE_NAME = "goal-front-jenkins"
-        TAG = "jenkins"
+        TAG = "deploy"
     }
     stages {
         stage('Build Frontend') {
