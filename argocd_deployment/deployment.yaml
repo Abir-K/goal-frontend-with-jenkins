@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: goal-fe
+  labels:
+    app: goal-fe
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: goal-fe
+  template:
+    metadata:
+      labels:
+        app: goal-fe
+    spec:
+      containers:
+      - name: goal-fe
+        image: kaderdevops/goal-front-jenkins:replaceImageTag
+        ports:
+        - containerPort: 8080
