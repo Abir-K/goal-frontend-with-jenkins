@@ -38,7 +38,8 @@ pipeline {
             GIT_CRED = "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"
         }
         steps {
-            withCredentials([usernamePassword(credentialsId: 'hellogithub', passwordVariable: 'pass', usernameVariable: 'uname')]) {
+            //withCredentials([usernamePassword(credentialsId: 'hellogithub', passwordVariable: 'pass', usernameVariable: 'uname')]) 
+            withCredentials([string(credentialsId: 'hellogithub', variable: 'GIT_CRED')]){
                 sh '''
                     git config --global user.email "abirbeatz@gmail.com"
                     git config --global user.name "Abir-K"
