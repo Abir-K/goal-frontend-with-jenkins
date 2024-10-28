@@ -29,10 +29,10 @@ pipeline {
         stage('Update Deployment File') {
         environment {
             GIT_REPO_NAME = "goal-frontend-with-jenkins"
-            GIT_USER_NAME = "Abik-K"
+            GIT_USER_NAME = "Abir-K"
         }
         steps {
-            withCredentials([string(credentialsId: 'github', variable: 'github')]) {
+            withCredentials([usernamePassword(credentialsId: 'hellogithub', passwordVarialble: 'pass', usernameVariable: 'uname')]) {
                 sh '''
                     git config user.email "abirbeatz@gmail.com"
                     git config user.name "Abir-K"
@@ -40,7 +40,7 @@ pipeline {
                     sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" argocd_deployment/deployment.yaml
                     git add argocd_deployment/deployment.yaml
                     git commit -m "New Tag_${BUILD_NUMBER}"
-                    git push https://${github}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
+                    git push https://$uname:$pass@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
                 '''
             }
         }
