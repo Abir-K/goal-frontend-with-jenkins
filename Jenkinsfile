@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/Abir-K/goal-frontend-with-jenkins'
+                git branch: 'main', url: 'https://github.com/Abir-K/goal-frontend-with-jenkins'
             }
         }
         stage('Build Frontend') {
