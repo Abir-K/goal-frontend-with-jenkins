@@ -46,7 +46,7 @@ pipeline {
                     sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" argocd_deployment/deployment.yaml
                     git add argocd_deployment/deployment.yaml
                     git commit -m "New Tag_${BUILD_NUMBER}"
-                    git push https://$uname:${GIT_CRED}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git main
+                    git push https://${GIT_CRED}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
                     
                 '''
             }
