@@ -39,8 +39,8 @@ pipeline {
         steps {
             withCredentials([usernamePassword(credentialsId: 'hellogithub', passwordVariable: 'pass', usernameVariable: 'uname')]) {
                 sh '''
-                    git config user.email "abirbeatz@gmail.com"
-                    git config user.name "Abir-K"
+                    git config --global user.email "abirbeatz@gmail.com"
+                    git config --global user.name "Abir-K"
                     BUILD_NUMBER=${TAG}
                     sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" argocd_deployment/deployment.yaml
                     git add argocd_deployment/deployment.yaml
