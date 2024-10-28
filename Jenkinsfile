@@ -26,5 +26,24 @@ pipeline {
                 }
             }
         }
+        stage('Update Deployment File') {
+        environment {
+            GIT_REPO_NAME = "goal-frontend-with-jenkins"
+            GIT_USER_NAME = "Abik-K"
+        }
+        steps {
+            withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
+                sh '''
+                    git config user.email "abirbeatz@gmail.com"
+                    git config user.name "Abir-K"
+                    BUILD_NUMBER=${TAG}
+                    sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" argocd_deployment/deployment.yml
+                    git add argocd_deployment/deployment.yml
+                    git commit -m "New Tag_${BUILD_NUMBER}"
+                    git push https://${jenkinsaccess}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
+                '''
+            }
+        }
+    }
     }
 }
