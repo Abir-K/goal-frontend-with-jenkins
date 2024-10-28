@@ -32,7 +32,7 @@ pipeline {
             GIT_USER_NAME = "Abir-K"
         }
         steps {
-            withCredentials([usernamePassword(credentialsId: 'hellogithub', passwordVarialble: 'pass', usernameVariable: 'uname')]) {
+            withCredentials([usernamePassword(credentialsId: 'hellogithub', passwordVariable: 'pass', usernameVariable: 'uname')]) {
                 sh '''
                     git config user.email "abirbeatz@gmail.com"
                     git config user.name "Abir-K"
