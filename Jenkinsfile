@@ -35,7 +35,7 @@ pipeline {
         environment {
             GIT_REPO_NAME = "goal-frontend-with-jenkins"
             GIT_USER_NAME = "Abir-K"
-            GIT_CRED = $ {{ secret.GIT_CRED }}
+            GIT_CRED = $ {{ secret.GIT_CRED }} //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_XOXO
         }
         steps {
             //withCredentials([usernamePassword(credentialsId: 'hellogithub', passwordVariable: 'pass', usernameVariable: 'uname')]) 
