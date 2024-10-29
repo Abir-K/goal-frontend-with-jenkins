@@ -25,6 +25,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+          GH_PAT: ${{ secrets.GH_PAT }}
         run: |
           aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.$AWS_REGION.amazonaws.com
 
@@ -52,9 +53,11 @@ jobs:
         run: |
           git config --local user.name "Abir-K"
           git config --local user.email "abirbeatz@gmail.com"
+          git remote set-url origin https://${GH_PAT}@github.com/Abir-K/goal-frontend-with-jenkins.git
           git add ./argocd_deployment/deployment.yaml
           git commit -m "Update image tag to ${{ env.IMAGE_TAG }}"
           git push
+    
 
 
 
