@@ -45,7 +45,7 @@ jobs:
       - name: Update Kubernetes Deployment YAML
         run: |
           cat ./argocd_deployment/deployment.yaml
-          sed -i "s|image: .*/goal-app-frontend:.*|image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/goal-app-frontend:${{ env.IMAGE_TAG }}|g" ./argocd_deployment/deployment.yaml
+          sed -i "s|image: .*goal-app-frontend:.*|image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/goal-app-frontend:${{ env.IMAGE_TAG }}|g" ./argocd_deployment/deployment.yaml
           cat ./argocd_deployment/deployment.yaml
       # Commit the updated YAML file back to the repository
       - name: Commit updated Kubernetes YAML
