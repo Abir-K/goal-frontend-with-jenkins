@@ -55,7 +55,7 @@ jobs:
           git config --local user.email "abirbeatz@gmail.com"
           git add ./argocd_deployment/deployment.yaml
           git commit -m "Update image tag to ${{ env.IMAGE_TAG }}"
-          git push https://${{ secrets.GH_PAT }}@github.com/Abir-K/goal-frontend-with-jenkins HEAD:main
+          git push https://${{ secrets.GH_PAT }}@github.com/Abir-K/goal-frontend-with-jenkins
     
 
 
