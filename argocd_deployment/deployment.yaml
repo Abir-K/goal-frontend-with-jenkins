@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: goal-fe
-        image: goal-app-frontend:0.3
+        image: goal-app-frontend:latest
         ports:
         - containerPort: 8080
