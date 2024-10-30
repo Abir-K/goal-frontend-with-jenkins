@@ -16,6 +16,8 @@ spec:
     spec:
       containers:
       - name: goal-fe
-        image: 699475925713.dkr.ecr.eu-north-1.amazonaws.com/goal-app-frontend:latest-d4b2f6d0ec01c758b0664aeeb0eb7558171c522b
+        image: 699475925713.dkr.ecr.ap-south-1.amazonaws.com/goal-app-frontend:latest-bd80a0a08d4ba6030ffcb8748fa96dd101a38d54
         ports:
         - containerPort: 8080
+      -imagePullSecrets:
+        -name: ecr-secret

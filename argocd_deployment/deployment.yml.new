@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: goal-fe
-        image: 699475925713.dkr.ecr.eu-north-1.amazonaws.com/goal-app-frontend:latest-bd80a0a08d4ba6030ffcb8748fa96dd101a38d54
+        image: 699475925713.dkr.ecr.ap-south-1.amazonaws.com/goal-app-frontend:latest-bd80a0a08d4ba6030ffcb8748fa96dd101a38d54
         ports:
         - containerPort: 8080
       -imagePullSecrets:
@@ -26,8 +26,8 @@ spec:
 
 
 #Create kubenetes Secrets:
-# aws ecr get-login-password --region eu-north-1 | kubectl create secret docker-registry ecr-secret \
-#   --docker-server=699475925713.dkr.ecr.eu-north-1.amazonaws.com \
-#   --docker-username=AWS \
-#   --docker-password=$(aws ecr get-login-password --region eu-north-1)
+aws ecr get-login-password --region ap-south-1 | kubectl create secret docker-registry ecr-secret \
+   --docker-server=699475925713.dkr.ecr.ap-south-1.amazonaws.com \
+   --docker-username=AWS \
+   --docker-password=$(aws ecr get-login-password --region ap-south-1)
 
