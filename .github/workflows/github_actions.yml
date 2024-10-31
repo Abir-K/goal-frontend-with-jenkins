@@ -61,7 +61,7 @@ jobs:
       - name: Load and Push Docker Image
         run: |
           IMAGE_NAME="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/goal-app-frontend:${{ env.IMAGE_TAG }}"
-          docker load -i "${IMAGE_TAG}.tar"
+          docker load -i a.tar
           # docker tag "${IMAGE_TAG}":latest my-dockerhub-username/"${IMAGE_TAG}.tar":latest/
           docker images
 
