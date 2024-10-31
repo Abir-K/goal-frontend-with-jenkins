@@ -46,7 +46,7 @@ jobs:
 
   # Job 2: Push the Docker image to Amazon ECR
   push:
-    needs: build
+    #needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Log in to Amazon ECR
@@ -74,7 +74,7 @@ jobs:
 
   # Job 3: Deploy by updating Kubernetes YAML and pushing the change to GitHub
   deploy:
-    needs: push
+    #needs: push
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
