@@ -43,7 +43,8 @@ jobs:
         run: |
             IMAGE_NAME="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/goal-app-frontend:${{ env.IMAGE_TAG }}"
             docker build --no-cache -t "$IMAGE_NAME" .
-            docker save ${IMAGE_NAME} -o ./"$IMAGE_NAME.tar"
+            ls
+            docker save ${IMAGE_NAME} -o a.tar
             echo "Built Docker image: $IMAGE_NAME"
             docker images  # List images to confirm
 
