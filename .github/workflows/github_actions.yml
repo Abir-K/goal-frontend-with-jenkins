@@ -43,13 +43,27 @@ jobs:
         run: |
             IMAGE_NAME="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/goal-app-frontend:${{ env.IMAGE_TAG }}"
             docker build --no-cache -t "$IMAGE_NAME" .
+            docker save ${IMAGE_NAME} -o "$IMAGE_NAME.tar"
             echo "Built Docker image: $IMAGE_NAME"
             docker images  # List images to confirm
+
+      - name: Upload Docker Image as Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: docker-image
+          path: "${IMAGE_TAG}.tar"
 
   upload:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: Load and Push Docker Image
+        run: |
+          IMAGE_NAME="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/goal-app-frontend:${{ env.IMAGE_TAG }}"
+          docker load -i "${IMAGE_TAG}.tar"
+          # docker tag "${IMAGE_TAG}":latest my-dockerhub-username/"${IMAGE_TAG}.tar":latest/
+          docker images
+
       - name: Log in to Amazon ECR
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
