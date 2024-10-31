@@ -12,7 +12,6 @@ jobs:
   # Job 1: Build the Docker image
   build:
     runs-on: ubuntu-latest
-    # runs-on: ['self-hosted', 'Linux', 'X64']
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -20,15 +19,6 @@ jobs:
       - name: Install Docker CLI & AWS CLI (only for local run)
         if: runner.os == 'Linux'
         run: |
-          # Step 1: Uninstall any existing Docker and containerd packages
-          sudo apt-get remove -y docker docker-engine docker.io containerd runc || true
-          
-          # Step 2: Purge any leftover packages
-          sudo apt-get purge -y docker docker-engine docker.io containerd runc || true
-          sudo apt-get autoremove -y
-          sudo apt-get clean
-          
-          # Step 3: Install Docker and AWS CLI
           sudo apt-get update
           sudo apt-get install -y \
             apt-transport-https \
@@ -40,7 +30,6 @@ jobs:
           echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
           sudo apt-get update
           sudo apt-get install -y docker-ce docker-ce-cli containerd.io awscli
-      
 
       - name: Set Docker image tag
         id: vars
@@ -51,6 +40,7 @@ jobs:
       - name: Build Docker Image
         run: |
           docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/goal-app-frontend:${{ env.IMAGE_TAG }} .
+          docker images  # List images to confirm
 
   # Job 2: Push the Docker image to Amazon ECR
   push:
@@ -65,11 +55,14 @@ jobs:
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
         run: |
           aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.$AWS_REGION.amazonaws.com
-
+        
       - name: Debug IMAGE_TAG
         run: |
           echo "IMAGE_TAG=latest-$(echo ${GITHUB_SHA} | cut -c1-5)" >> $GITHUB_ENV
           echo "IMAGE_TAG=${{ env.IMAGE_TAG }}"
+        
+      - name: List Docker images before push
+        run: docker images  # Check the images before pushing
 
       - name: Push Docker Image
         run: |
