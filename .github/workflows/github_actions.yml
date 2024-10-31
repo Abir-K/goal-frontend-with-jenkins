@@ -52,7 +52,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: docker-image
-          path: "${IMAGE_TAG}.tar"
+          path: a.tar
 
   upload:
     needs: build
