@@ -17,9 +17,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install DOCKER CLI & AWS CLI (only for local run)
+      - name: Install Docker CLI & AWS CLI (only for local run)
         if: runner.os == 'Linux'
         run: |
+          # Step 1: Uninstall any existing Docker and containerd packages
+          sudo apt-get remove -y docker docker-engine docker.io containerd runc || true
+          
+          # Step 2: Purge any leftover packages
+          sudo apt-get purge -y docker docker-engine docker.io containerd runc || true
+          sudo apt-get autoremove -y
+          sudo apt-get clean
+          
+          # Step 3: Install Docker and AWS CLI
           sudo apt-get update
           sudo apt-get install -y \
             apt-transport-https \
@@ -30,8 +39,8 @@ jobs:
           curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
           echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
           sudo apt-get update
-          sudo apt-get install -y docker-ce docker-ce-cli containerd.io
-          sudo apt-get install -y awscli
+          sudo apt-get install -y docker-ce docker-ce-cli containerd.io awscli
+      
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
