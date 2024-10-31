@@ -9,13 +9,12 @@ on:
       - main
 
 jobs:
-  # Job 1: Build the Docker image
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
+      
       - name: Install Docker CLI & AWS CLI (only for local run)
         if: runner.os == 'Linux'
         run: |
@@ -31,6 +30,9 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y docker-ce docker-ce-cli containerd.io awscli
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
       - name: Set Docker image tag
         id: vars
         run: |
@@ -39,14 +41,10 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          IMAGE_NAME="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/goal-app-frontend:${{ env.IMAGE_TAG }}"
-          docker build --no-cache -t "$IMAGE_NAME" .
-          echo "Built Docker image: $IMAGE_NAME"
-          docker images  # List images to confirm
+          docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/goal-app-frontend:${{ env.IMAGE_TAG }} .
 
-  # Job 2: Push the Docker image to Amazon ECR
   push:
-    #needs: build
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Log in to Amazon ECR
@@ -55,39 +53,31 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+          IMAGE_TAG: ${{ env.IMAGE_TAG }}
         run: |
-          aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.$AWS_REGION.amazonaws.com
-        
-      - name: Debug IMAGE_TAG
-        run: |
-          echo "IMAGE_TAG=latest-$(echo ${GITHUB_SHA} | cut -c1-5)" >> $GITHUB_ENV
-          echo "IMAGE_TAG=${{ env.IMAGE_TAG }}"
-        
-      - name: List Docker images before push
-        run: docker images  # Check the images before pushing
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
 
+      # Push the Docker image to Amazon ECR
       - name: Push Docker Image
         run: |
-          IMAGE_NAME="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/goal-app-frontend:${{ env.IMAGE_TAG }}"
-          echo "Pushing image: $IMAGE_NAME"
-          docker push "$IMAGE_NAME"
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/goal-app-frontend:${{ env.IMAGE_TAG }}
 
-  # Job 3: Deploy by updating Kubernetes YAML and pushing the change to GitHub
-  deploy:
-    #needs: push
+  update_deployment:
+    needs: push
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # Update the Kubernetes deployment YAML with the new image tag
       - name: Update Kubernetes Deployment YAML
         run: |
+          cat ./argocd_deployment/deployment.yaml
           sed -i "s|image: .*goal-app-frontend:.*|image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/goal-app-frontend:${{ env.IMAGE_TAG }}|g" ./argocd_deployment/deployment.yaml
           cat ./argocd_deployment/deployment.yaml
 
+      # Commit the updated YAML file back to the repository
       - name: Commit updated Kubernetes YAML
-        env:
-          GH_PAT: ${{ secrets.GH_PAT }}
         run: |
           git config --local user.name "Abir-K"
           git config --local user.email "abirbeatz@gmail.com"
